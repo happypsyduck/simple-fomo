@@ -14,7 +14,7 @@ contract Simple_FOMO_Round_1 {
   // Lotto information
   uint256 public potSize = 0; // This is the size of the lottery pool in Wei
   uint256 public entryCost = 1000000000000000; // This is the initial cost to enter the lottery pool (0.001 ETH)
-  uint256 constant entryCostStep = 100000000000000; // This is the increase in the entry cost per entry (0.0001 ETH)
+  uint256 constant entryCostStep = 2000000000000000; // This is the increase in the entry cost per 25 entries (0.002 ETH)
   address public lastEntryAddress; // This is the address of the person who has entered the pool last
   uint256 public deadline; // This represents the initial deadline for the pool
   uint256 constant gameDuration = 7; // This is the default amount of days the lottery will last for, can be extended
@@ -82,8 +82,10 @@ contract Simple_FOMO_Round_1 {
 
     potSize = potSize + potAddition; // Add this amount to the pot
     extensionTime = 600 + (totalEntries / 2); // The extension time increases as more entries are submitted
-    entryCost = entryCost + entryCostStep; // Increase the cost to enter
     totalEntries = totalEntries + 1; // Increased the amount of entries
+    if(totalEntries % 25 == 0){
+      entryCost = entryCost + entryCostStep; // Increase the cost to enter every 25 entries
+    }
 
     if(currentTime + extensionTime > deadline){ // Move the deadline if the extension time brings it beyond
       deadline = currentTime + extensionTime;
