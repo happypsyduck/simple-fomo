@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta content="text/html; charset=UTF-8" http-equiv="content-type">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+
+<title>Simple FOMO - Don't miss out!</title>
+
+<script src="js/jquery.js"></script>
+<script src="js/bootstrap.js"></script>
+<link rel="stylesheet" href="css/bootstrap.css" >
+<link rel="stylesheet" href="css/bootstrap-theme.min.css">
+<script src="js/bignumber.js"></script>
+<script src="js/interface.js"></script>
+<link rel="stylesheet" href="css/ui.css" >
+
+</head>
+
+<body>
+
+<div class="container marketing">
+	<div class="row featurette">
+		<div class="col-md-8 col-md-offset-2" style="text-align: center; margin-bottom: 20px; margin-top: 50px;">
+			<span style="font-size: 48px;"><strong>Simple FOMO</strong><br></span>
+			<span style="font-size: 16px;">Get it in before you miss your chance.<br></span>
+		</div>
+		<div class="col-md-6 col-md-offset-3" style="text-align: center; margin-bottom: 20px; margin-top: 20px; border: 1px solid white; border-radius: 5px; padding: 10px;">
+			<big><strong>Contract Details:<br></strong></big>
+			Address: <a href="https://etherscan.io" target="_blank" id="contract_link">N/A</a><br>
+			<small>(Round One)</small><br><br>
+			<span id="metamask_interactive" onclick="metamaskButtonClick();" style="text-decoration: underline; cursor: pointer;">Install MetaMask To Participate</span>
+		</div>
+		<div class="col-md-8 col-md-offset-2" style="text-align: center; margin-bottom: 20px; margin-top: 20px; border: 1px solid white; border-radius: 5px; padding: 10px;">
+			<big><strong>Game Rules:<br></strong></big>
+			<div style="text-align: left;">
+				Simple FOMO is a game theory based lottery that rewards the last person to enter the lottery with the entire pot.  
+				<ul>
+					<li>The initial deadline is <span id="initial_deadline">TBA</span>.</li>
+					<li>The deadline can be extended by submitting an entry.</li>
+					<li>The initial extension time is 10 minutes. Each entry increases the extension time by 0.5 seconds.</li>
+					<li>The deadline will only be extended if at the time of the last entry, the extension time is beyond the deadline.</li>
+					<li>After the deadline, no more entries will be accepted and the last person can claim the entire pot after 5 minutes.</li>
+					<li>The initial cost to enter is 0.001 ETH. Each entry increases the cost by 0.0001 ETH.</li>
+					<li>Usage fee is 2.5% of entry cost, deducted at time of entry.</li>
+				</ul>
+			</div>
+		</div>
+		<div id="game_info" style="display: none;">
+			<div class="col-md-4" style="text-align: center; margin-bottom: 20px; margin-top: 20px; border: 1px solid white; border-radius: 5px; padding: 10px; height: 165px;">
+				<big><strong>Pot Size:<br></strong></big>
+				<div id="pot_size" style="font-size: 52px; font-weight: bold;">N/A</div> 
+				<div style="font-size: 32px; font-weight: bold;">ETH</div>
+			</div>
+			<div class="col-md-4" style="text-align: center; margin-bottom: 20px; margin-top: 20px;">
+				<div id="last_person_container" style="width: 90%; margin-left: auto; margin-right: auto; border: 1px solid rgb(82,249,11); border-radius: 5px; padding: 43px; height: 165px; color: rgb(82,249,11);">
+					<big><strong>Last Person:<br></strong></big>
+					<div id="last_person" style="font-size: 32px; font-weight: bold;">N/A</div> 
+				</div>
+			</div>
+			<div class="col-md-4" style="text-align: center; margin-bottom: 20px; margin-top: 20px; border: 1px solid white; border-radius: 5px; padding: 43px; height: 165px;">
+				<big><strong>Time To Deadline:<br></strong></big>
+				<div id="time_remain" style="font-size: 32px; font-weight: bold;">N/A</div> 
+			</div>
+			<div id="entry_container" class="col-md-8 col-md-offset-2" style="text-align: center; margin-bottom: 20px; margin-top: 20px; padding: 10px;">
+				<big><strong>Current Entry Cost: <span id="current_cost">N/A</span> ETH<br></strong></big>
+				<button id="enter_button" style="font-size: 26px; background-color: black; color: white; margin: 10px; border: 1px solid white; padding-left: 20px; padding-right: 20px;" onclick="tryAddEntry();">Submit Entry</button><br><br>
+				Stats refreshing in: <big><span id="refresh_time">10</span> s</big>
+			</div>
+			<div id="widthdraw_container" class="col-md-8 col-md-offset-2" style="text-align: center; margin-bottom: 20px; margin-top: 20px; padding: 10px; display: none;">
+				<big><strong><span id="claim_detail">You have won the pot! Withdraw below:<span><br></strong></big>
+				<button id="claim_button" style="font-size: 26px; background-color: black; color: white; margin: 10px; border: 1px solid white; padding-left: 20px; padding-right: 20px;" onclick="tryClaim();">Claim Winnings</button><br><br>
+			</div>
+		</div>
+		<div class="col-md-12" style="text-align: center; margin-bottom: 50px; padding: 10px;" id="game_info_preview">
+			Connect to MetaMask to load the lottery information.
+		</div>
+		<div class="col-md-12" style="text-align: center; margin-bottom: 50px; padding: 10px;">
+			Visit another HappyPsyduck game theory based product:<br>
+			<a href="https://happypsyduck.github.io/fiatdex-gateway/" target="_blank">FiatDex - A third party free ETH to Fiat swap protocol and marketplace</a>
+		</div>		
+	</div>
+</div>
+
+</body>
+
+</html>
