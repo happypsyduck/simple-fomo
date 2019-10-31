@@ -81,93 +81,96 @@ function updateLottoWindow(){
 		// Obtain all the lottery information in one call: entry cost (ETH), potsize (ETH), last address (0x), deadline time (sec)
 		refreshTime = 10; // The default refresh rate is every 10 seconds
 
-		const callParameters = [{
-		  to: contractAddress,
-		  data: '0x'+contract_lottoDetails
-		},"latest"];
+		if (ethereum.networkVersion === targetNetwork) {
+			// Only query network if on same network
+			const callParameters = [{
+			  to: contractAddress,
+			  data: '0x'+contract_lottoDetails
+			},"latest"];
 
-		//Get data from blockchain
-		ethereum.sendAsync({
-		  method: 'eth_call',
-		  params: callParameters,
-		  id: "1",
-		  jsonrpc: "2.0"
-		}, function (err, result) {
-			if(!err){
-				if(!result["error"]){
-					var lotto_data = result["result"].substring(2); // Remove the 0x
+			//Get data from blockchain
+			ethereum.sendAsync({
+			  method: 'eth_call',
+			  params: callParameters,
+			  id: "1",
+			  jsonrpc: "2.0"
+			}, function (err, result) {
+				if(!err){
+					if(!result["error"]){
+						var lotto_data = result["result"].substring(2); // Remove the 0x
 
-					// Break down the lotto data
-					// entry cost (ETH), potsize (ETH), last address (0x), deadline time (sec)
-					var entry_cost_wei = new BigNumber('0x'+lotto_data.substring(0,64));
-					var pot_size_wei = new BigNumber('0x'+lotto_data.substring(64,64*2));
-					var last_address = lotto_data.substring(64*2,64*3).toLowerCase();
-					deadlineTime = new BigNumber('0x'+lotto_data.substring(64*3,64*4));
+						// Break down the lotto data
+						// entry cost (ETH), potsize (ETH), last address (0x), deadline time (sec)
+						var entry_cost_wei = new BigNumber('0x'+lotto_data.substring(0,64));
+						var pot_size_wei = new BigNumber('0x'+lotto_data.substring(64,64*2));
+						var last_address = lotto_data.substring(64*2,64*3).toLowerCase();
+						deadlineTime = new BigNumber('0x'+lotto_data.substring(64*3,64*4));
 
-					// Based on the lotto data, we will determine what the user sees
-					var formatted_userAddress = padleftzero(userAddress.substring(2),64).toLowerCase(); // Match case as well
-					// Convert wei into eth
-					var divfactor = new BigNumber('1000000000000000000'); // Divide factor to get ETH
-					var entry_cost = entry_cost_wei.div(divfactor);
-					var pot_size = pot_size_wei.div(divfactor);
+						// Based on the lotto data, we will determine what the user sees
+						var formatted_userAddress = padleftzero(userAddress.substring(2),64).toLowerCase(); // Match case as well
+						// Convert wei into eth
+						var divfactor = new BigNumber('1000000000000000000'); // Divide factor to get ETH
+						var entry_cost = entry_cost_wei.div(divfactor);
+						var pot_size = pot_size_wei.div(divfactor);
 
-					if($("#game_info").css('display') == 'none'){
-						// Show the game window
-						$("#game_info").show();
-						$("#game_info_preview").hide();						
-					}
+						if($("#game_info").css('display') == 'none'){
+							// Show the game window
+							$("#game_info").show();
+							$("#game_info_preview").hide();						
+						}
 
-					var current_time = Math.floor((new Date).getTime()/1000); // Get the current time in seconds
-					var countdownTime = deadlineTime - current_time;
+						var current_time = Math.floor((new Date).getTime()/1000); // Get the current time in seconds
+						var countdownTime = deadlineTime - current_time;
 
-					if(formatted_userAddress == last_address){
-						// Color the window to me
-						$("#last_person").html("You");
-						$("#last_person_container").css("color","rgb(82,249,11)");
-						$("#last_person_container").css("border","1px solid rgb(82,249,11)");
-					}else{
-						$("#last_person").html("Not You");
-						$("#last_person_container").css("color","red");
-						$("#last_person_container").css("border","1px solid red");
-					}
-
-					$("#pot_size").html(pot_size.toString(10)); // Populate the pot size
-					$("#current_cost").html(entry_cost.toString(10)); // Add the current cost
-					
-					if(countdownTime <= 0){
-						// The lottery is over
-						gameOver = true;
-						$("#time_remain").html("Ended");
-						$("#entry_container").hide(); // Game is over, prevent additional entries
-						if(pot_size == 0){
-							// Winner has taken out winnings
-							$("#widthdraw_container").show();
-							$("#claim_detail").html("Winner has already claimed the lottery");
-							$("#claim_button").hide();
+						if(formatted_userAddress == last_address){
+							// Color the window to me
+							$("#last_person").html("You");
+							$("#last_person_container").css("color","rgb(82,249,11)");
+							$("#last_person_container").css("border","1px solid rgb(82,249,11)");
 						}else{
-							// Winner hasn't claimed yet
-							if(formatted_userAddress == last_address){
-								// I am the winner
+							$("#last_person").html("Not You");
+							$("#last_person_container").css("color","red");
+							$("#last_person_container").css("border","1px solid red");
+						}
+
+						$("#pot_size").html(pot_size.toString(10)); // Populate the pot size
+						$("#current_cost").html(entry_cost.toString(10)); // Add the current cost
+						
+						if(countdownTime <= 0){
+							// The lottery is over
+							gameOver = true;
+							$("#time_remain").html("Ended");
+							$("#entry_container").hide(); // Game is over, prevent additional entries
+							if(pot_size == 0){
+								// Winner has taken out winnings
 								$("#widthdraw_container").show();
+								$("#claim_detail").html("Winner has already claimed the lottery");
+								$("#claim_button").hide();
+							}else{
+								// Winner hasn't claimed yet
+								if(formatted_userAddress == last_address){
+									// I am the winner
+									$("#widthdraw_container").show();
+								}
 							}
-						}
-					}else{
-						if(countdownTime < 10){
-							refreshTime = countdownTime - 1;
-							if(refreshTime < 1){refreshTime = 1;}
 						}else{
-							refreshTime = 10;
+							if(countdownTime < 10){
+								refreshTime = countdownTime - 1;
+								if(refreshTime < 1){refreshTime = 1;}
+							}else{
+								refreshTime = 10;
+							}
+							adjustCountDown();
 						}
-						adjustCountDown();
-					}
 
+					}else{
+						console.log("RPC error: "+result["error"]);
+					}
 				}else{
-					console.log("RPC error: "+result["error"]);
+					console.log("An error occurred while pinging blockchain");
 				}
-			}else{
-				console.log("An error occurred while pinging blockchain");
-			}
-		});
+			});
+		}
 	}
 
 	$("#refresh_time").html(refreshTime);
