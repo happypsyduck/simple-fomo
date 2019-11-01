@@ -8,7 +8,7 @@ var refreshTime = 0;
 var gameOver = false; // Becomes true when time is out
 var deadlineTime = 0;
 
-var targetNetwork = "1"; // Use Rinkeby for now
+var targetNetwork = "1";
 
 // Contract function keccak hashes
 var contract_lottoDetails = "178524e3";
