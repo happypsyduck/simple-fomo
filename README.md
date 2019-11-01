@@ -1,11 +1,11 @@
-# Simple FOMO - Round 1 (Testnet)
+# Simple FOMO - Round 1
 This is a simple ethereum lottery game that rewards the last person to enter the lottery with the entire pot. While the premise is basic, it is an exploration into the psychology of human desire to uncover the visceral feelings that describe our fears of missing out (FOMO).
 
 ## Website
 https://happypsyduck.github.io/simple-fomo/
 
 ## Running Mirror
-This is a browser based application and is mobile ready. It is advised to clone the website in case it goes down. You need to follow these steps to start running the web interface locally:
+This is a browser based application and is mobile optimized. It is advised to clone the website in case it goes down. You need to follow these steps to start running the web interface locally:
 * Download entire git onto your computer
 * Setup a localhost server which has access to the downloaded index.html file
 * Open file in browser via localhost server
