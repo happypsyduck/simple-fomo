@@ -1,14 +1,14 @@
 pragma solidity ^0.4.26;
 
 // This is the smart contract for Simple FOMO
-// A game theory based lottery that rewards the last entry with the entire pot
-// Modeled on Fomo3D but without its complexities and has safeguards to reduce the chance
+// A game theory based lottery that rewards the last entry with the entire pot.
+// Modeled on the infamous Fomo3D but without its complexities, Simple FOMO has safeguards to reduce the chance
 // a person will clog the blockchain to make them become the last entry and the winner.
 
 contract Simple_FOMO_Round_1 {
 
   // Administrator information
-  address public feeAddress; // This is the address of the person that collects the fees, nothing more, nothing less. It can change.
+  address public feeAddress; // This is the address of the person that collects the fees, nothing more, nothing less. It can be changed.
   uint256 public feePercent = 2500; // This is the percent of the fee (2500 = 2.5%, 1 = 0.001%)
 
   // Lotto information
@@ -17,8 +17,8 @@ contract Simple_FOMO_Round_1 {
   uint256 constant entryCostStep = 2000000000000000; // This is the increase in the entry cost per 25 entries (0.002 ETH)
   address public lastEntryAddress; // This is the address of the person who has entered the pool last
   uint256 public deadline; // This represents the initial deadline for the pool
-  uint256 constant gameDuration = 7; // This is the default amount of days the lottery will last for, can be extended
-  uint256 public extensionTime = 600; // The default extension time (600 seconds = 10 minutes)
+  uint256 constant gameDuration = 7; // This is the default amount of days the lottery will last for, can be extended with entries
+  uint256 public extensionTime = 600; // The default extension time per entry (600 seconds = 10 minutes)
                                       // Extension time is increased by 0.5 seconds for each entry
   uint256 public totalEntries = 0; // The total amount of entries in the pool
 
@@ -26,7 +26,7 @@ contract Simple_FOMO_Round_1 {
     feeAddress = msg.sender; // Set the contract creator to the first feeAddress
     lastEntryAddress = msg.sender;
     potSize = msg.value;
-    deadline = now + 7 * 86400; // Set the game to end 7 days after lottery start
+    deadline = now + gameDuration * 86400; // Set the game to end 7 days after lottery start
   }
 
   event ClaimedLotto(address _user, uint256 _amount); // Auxillary events
