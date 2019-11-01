@@ -3,12 +3,12 @@
 var detectMetamask = false; // Default value is that metamask is not on the system
 var metamaskConnected = false;
 var userAddress = "";
-var contractAddress = "0xa7565a3E2d0044b8BC887Bc6451f6e70ac551462";
+var contractAddress = "0xa5a9B6a783D17C15822D3e70dbb1E59D736284eF";
 var refreshTime = 0;
 var gameOver = false; // Becomes true when time is out
 var deadlineTime = 0;
 
-var targetNetwork = "4"; // Use Rinkeby for now
+var targetNetwork = "1"; // Use Rinkeby for now
 
 // Contract function keccak hashes
 var contract_lottoDetails = "178524e3";
@@ -184,7 +184,7 @@ function adjustCountDown(){
 	var countdownTime = deadlineTime - current_time;
 	if(countdownTime < 0){countdownTime = 0;}
 
-	var hours = Math.floor((countdownTime % (60 * 60 * 24)) / (60 * 60));
+	var hours = Math.floor(countdownTime / (60 * 60));
 	var minutes = Math.floor((countdownTime % (60 * 60)) / (60));
 	var seconds = Math.floor(countdownTime % 60);
 
