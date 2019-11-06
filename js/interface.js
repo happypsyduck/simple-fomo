@@ -1,4 +1,4 @@
-// Code that runs the client side based FiatDex gateway
+// Code that runs the client side based Simple FOMO
 
 var detectMetamask = false; // Default value is that metamask is not on the system
 var metamaskConnected = false;
@@ -8,7 +8,7 @@ var refreshTime = 0;
 var gameOver = false; // Becomes true when time is out
 var deadlineTime = 0;
 
-var targetNetwork = "1";
+var targetNetwork = "1"; // Use Rinkeby for now
 
 // Contract function keccak hashes
 var contract_lottoDetails = "178524e3";
