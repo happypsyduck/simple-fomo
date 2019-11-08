@@ -1,4 +1,4 @@
-# Simple FOMO - Round 1
+# Simple FOMO - Round 1 (Ended)
 This is a simple ethereum lottery game that rewards the last person to enter the lottery with the entire pot. While the premise is basic, it is an exploration into the psychology of human desire to uncover the visceral feelings that describe our fears of missing out (FOMO).
 
 ## Website
