@@ -3,12 +3,12 @@
 var detectMetamask = false; // Default value is that metamask is not on the system
 var metamaskConnected = false;
 var userAddress = "";
-var contractAddress = "0xa5a9B6a783D17C15822D3e70dbb1E59D736284eF";
+var contractAddress = "0xa7565a3E2d0044b8BC887Bc6451f6e70ac551462";
 var refreshTime = 0;
 var gameOver = false; // Becomes true when time is out
 var deadlineTime = 0;
 
-var targetNetwork = "1"; // Use Rinkeby for now
+var targetNetwork = "1";
 
 // Contract function keccak hashes
 var contract_lottoDetails = "178524e3";
@@ -100,11 +100,13 @@ function updateLottoWindow(){
 						var lotto_data = result["result"].substring(2); // Remove the 0x
 
 						// Break down the lotto data
-						// entry cost (ETH), potsize (ETH), last address (0x), deadline time (sec)
+						// entry cost (ETH), potsize (ETH), last address (0x), most entry address (0x), most entry count, deadline time (sec)
 						var entry_cost_wei = new BigNumber('0x'+lotto_data.substring(0,64));
 						var pot_size_wei = new BigNumber('0x'+lotto_data.substring(64,64*2));
 						var last_address = lotto_data.substring(64*2,64*3).toLowerCase();
-						deadlineTime = new BigNumber('0x'+lotto_data.substring(64*3,64*4));
+						var most_address = lotto_data.substring(64*3,64*4).toLowerCase();
+						var most_entries = new BigNumber('0x'+lotto_data.substring(64*4,64*5));
+						deadlineTime = new BigNumber('0x'+lotto_data.substring(64*5,64*6));
 
 						// Based on the lotto data, we will determine what the user sees
 						var formatted_userAddress = padleftzero(userAddress.substring(2),64).toLowerCase(); // Match case as well
@@ -133,8 +135,20 @@ function updateLottoWindow(){
 							$("#last_person_container").css("border","1px solid red");
 						}
 
+						if(formatted_userAddress == most_address){
+							// Color the window to me
+							$("#most_entries_me").html("You");
+							$("#most_entry_container").css("color","rgb(82,249,11)");
+							$("#most_entry_container").css("border","1px solid rgb(82,249,11)");
+						}else{
+							$("#most_entries_me").html("Not You");
+							$("#most_entry_container").css("color","red");
+							$("#most_entry_container").css("border","1px solid red");
+						}
+
 						$("#pot_size").html(pot_size.toString(10)); // Populate the pot size
 						$("#current_cost").html(entry_cost.toString(10)); // Add the current cost
+						$("#most_entries").html(most_entries.toString(10)); // Add the most entry amount
 						
 						if(countdownTime <= 0){
 							// The lottery is over
@@ -142,14 +156,14 @@ function updateLottoWindow(){
 							$("#time_remain").html("Ended");
 							$("#entry_container").hide(); // Game is over, prevent additional entries
 							if(pot_size == 0){
-								// Winner has taken out winnings
+								// Winners have taken out winnings
 								$("#widthdraw_container").show();
-								$("#claim_detail").html("Winner has already claimed the lottery");
+								$("#claim_detail").html("Winners have already claimed the lottery");
 								$("#claim_button").hide();
 							}else{
-								// Winner hasn't claimed yet
-								if(formatted_userAddress == last_address){
-									// I am the winner
+								// Winners haven't claimed yet
+								if(formatted_userAddress == last_address || formatted_userAddress == most_address){
+									// I am a winner
 									$("#widthdraw_container").show();
 								}
 							}
